@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Ánh Dương - Hệ Thống Quản Lý</title>
+
+  <!-- Icon & chế độ app khi thêm vào màn hình chính -->
+  <link rel="icon" href="https://i.postimg.cc/mZ0B69QB/logo-AD.png">
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/mZ0B69QB/logo-AD.png">
+  <meta name="theme-color" content="#1a56db">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Ánh Dương">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #1a56db;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    iframe {
+      border: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #fff;
+    }
+    /* Màn hình chờ trong lúc tải app */
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      z-index: 10;
+      transition: opacity .4s;
+    }
+    #loading.hide { opacity: 0; pointer-events: none; }
+    #loading img { width: 120px; margin-bottom: 18px; }
+    .spin {
+      width: 34px; height: 34px;
+      border: 4px solid rgba(255,255,255,.25);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading p { margin-top: 14px; font-size: 13px; opacity: .8; }
+  </style>
+</head>
+<body>
+
+  <div id="loading">
+    <img src="https://i.postimg.cc/mZ0B69QB/logo-AD.png" alt="Ánh Dương">
+    <div class="spin"></div>
+    <p>Đang tải hệ thống...</p>
+  </div>
+
+  <iframe id="app" allow="clipboard-write; fullscreen; autoplay"></iframe>
+
+  <script>
+    // ============================================================
+    // THAY LINK WEB APP CỦA BẠN VÀO ĐÂY (kết thúc bằng /exec)
+    // ============================================================
+    const APP_URL = "https://script.google.com/macros/s/AKfycbygOxtYphLgfzc5-Yug1KTDDraH_PCevRhYzMi0NkRaoSAeALXXENdT4KuzEYEsBUA/exec";
+    // ============================================================
+
+    const frame = document.getElementById('app');
+    const loading = document.getElementById('loading');
+
+    // Chuyển tiếp tham số auto-login (?u=...&p=...) vào trong app
+    frame.src = APP_URL + window.location.search;
+
+    // Ẩn màn hình chờ khi app đã tải xong
+    frame.addEventListener('load', function () {
+      loading.classList.add('hide');
+      setTimeout(function () { loading.style.display = 'none'; }, 450);
+    });
+
+    // Phòng khi mạng chậm: tự ẩn sau 15 giây
+    setTimeout(function () {
+      loading.classList.add('hide');
+    }, 15000);
+
+    // Xóa mật khẩu khỏi thanh địa chỉ sau khi đã chuyển vào app
+    if (window.location.search.indexOf('p=') !== -1) {
+      setTimeout(function () {
+        try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
